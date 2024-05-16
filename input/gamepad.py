@@ -10,6 +10,8 @@ class Event():
         self.event = event
         self.args = args
         self.kwargs = kwargs
+        self.info = {event.__name__: [self.args, self.kwargs]}
+        
 
     def run(self):
         self.event(*self.args, **self.kwargs)
@@ -27,6 +29,7 @@ class GamepadWrapper(Thread):
 
     def run(self):
         while self.running:
+
             if not len(self.buttonActions) == 0:
                 action = self.buttonActions.popleft()
                 if action == "stop":
@@ -45,7 +48,7 @@ class GamepadWrapper(Thread):
 
 
 if __name__ == "__main__":
-    def test_callback(action):
+    def test_callback(action): # updates must be run in the callback until I figure smth out
         action.run()
         wrapper.gamepad.update()
 
@@ -53,13 +56,15 @@ if __name__ == "__main__":
     wrapper = GamepadWrapper(test_callback)
     wrapper.start()
        
-    ev = Event(wrapper.gamepad.left_joystick, x_value=-10000, y_value=0)
-    ev2 = Event(wrapper.gamepad.left_joystick, x_value=0, y_value=0)
+    ev = Event(wrapper.gamepad.press_button, vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+    ev2 = Event(wrapper.gamepad.release_button, vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
 
-    for i in range(30):
+    for i in range(10):
         wrapper.addEvent(ev)
+        print(ev.info)
         time.sleep(0.1)
         wrapper.addEvent(ev2)
+        print(ev2.info)
         time.sleep(0.1)
 
     wrapper.addEvent("stop")
