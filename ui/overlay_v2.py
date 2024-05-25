@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QPushButton
 from PyQt5.QtCore import Qt, QTimer, QCoreApplication
 from PyQt5.QtGui import QPen, QBrush, QColor, QPainter
 import vgamepad as vg
@@ -13,7 +13,7 @@ class CircleWidget(QWidget):
         self.padding = padding
         self.circle_radius = radius
 
-        self.setGeometry(0, 0, 400, 400)
+        self.setGeometry(0, 0, 300, 300)
 
         self.brush_top = QBrush(Qt.yellow)
         self.brush_left = QBrush(Qt.blue)
@@ -45,7 +45,7 @@ class JoystickWidget(QWidget):
         self.padding = padding
         self.circle_radius = radius
 
-        self.setGeometry(0, 0, 300, 300)
+        self.setGeometry(0, 0, 700, 700)
         self.rx=0
         self.ry=0
         
@@ -90,14 +90,15 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Overlay")
-
+        
+    
         screen_geometry = QCoreApplication.instance().desktop().availableGeometry()
         x_position = screen_geometry.width() - self.width() +40
         y_position = 0
 
-        self.setGeometry(x_position, y_position, 600, 600)
+        self.setGeometry(x_position, y_position, 600, 1000)
 
-        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowOpacity(0.7)
@@ -105,14 +106,33 @@ class MainWindow(QMainWindow):
         self.main_widget = QWidget()
 
         layout = QHBoxLayout()
-        self.main_widget.setLayout(layout)
-        self.gamepad_buttons = CircleWidget(180, 70)
+        vertical_layout = QVBoxLayout()
+        
+        self.gamepad_buttons = CircleWidget(50, 70)
         self.joystick = JoystickWidget(10, 200)
 
+    
         layout.addWidget(self.gamepad_buttons)
         layout.addWidget(self.joystick)
-        # layout.layout().setAlignment(Qt.AlignVCenter)
+
+        vertical_layout.addLayout(layout)
+
+        hide_button = QPushButton("Hide Window")
+        hide_button.clicked.connect(self.close) 
+        vertical_layout.addWidget(hide_button)
+
+
+        # Center the button beneath the widgets
+        vertical_layout.addWidget(hide_button, alignment=Qt.AlignCenter)
+
+        self.main_widget.setLayout(vertical_layout)
+        
         self.setCentralWidget(self.main_widget)
+
+        
+
+
+        
 
         
 
