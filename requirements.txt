@@ -1,2 +1,3 @@
 vgamepad
-tkinter
+pyqt
+opencv-python
