@@ -8,7 +8,7 @@ import random
 
 def saveAnnotation(jointCamPath, positions):
 	if not os.path.exists(os.path.dirname(jointCamPath)):
-		os.mkdir(jointCamPath[:2] + "\\" + os.path.join(*jointCamPath.split('\\')[1:6]))
+		os.mkdir(jointCamPath[:2] + "\\" + os.path.join(*jointCamPath.split('\\')[1:-1]))
 
 	fOut = open(jointCamPath, 'w')
 	fOut.write("F4_KNU1_A " + str(positions[0][0]) + " " + str(positions[0][1]) + "\n")
