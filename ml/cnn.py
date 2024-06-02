@@ -23,31 +23,7 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(64, 64)
         self.relu7 = nn.ReLU()
 
-        self.PALM_POSITION = nn.Linear(64, 1)
-        self.TH_KNU3_A = nn.Linear(64, 1)
-        self.TH_KNU2_A = nn.Linear(64, 1)
-        self.TH_KNU1_B = nn.Linear(64, 1)
-        self.TH_KNU1_A = nn.Linear(64, 1)
-
-        self.F2_KNU3_A = nn.Linear(64, 1)
-        self.F2_KNU2_A = nn.Linear(64, 1)
-        self.F2_KNU1_B = nn.Linear(64, 1)
-        self.F2_KNU1_A = nn.Linear(64, 1)
-
-        self.F1_KNU3_A = nn.Linear(64, 1)
-        self.F1_KNU2_A = nn.Linear(64, 1)
-        self.F1_KNU1_B = nn.Linear(64, 1)
-        self.F1_KNU1_A = nn.Linear(64, 1)
-
-        self.F3_KNU3_A = nn.Linear(64, 1)
-        self.F3_KNU2_A = nn.Linear(64, 1)
-        self.F3_KNU1_B = nn.Linear(64, 1)
-        self.F3_KNU1_A = nn.Linear(64, 1)
-
-        self.F4_KNU3_A = nn.Linear(64, 1)
-        self.F4_KNU2_A = nn.Linear(64, 1)
-        self.F4_KNU1_B = nn.Linear(64, 1)
-        self.F4_KNU1_A = nn.Linear(64, 1)
+        self.output = nn.Linear(64, 42) # 21 outputs * 2 coordinates
 
 
     def forward(self, x):
@@ -70,34 +46,14 @@ class Net(nn.Module):
         x = self.fc2(x)
         x = self.relu7(x)
 
-        # Output layers
-        palm = self.PALM_POSITION(x)
-        th_knu3_a = self.TH_KNU3_A(x)
-        th_knu2_a = self.TH_KNU2_A(x)
-        th_knu1_b = self.TH_KNU1_B(x)
-        th_knu1_a = self.TH_KNU1_A(x)
+        outputs = self.output(x)
+        outputs = outputs.view(-1, 21, 2)
 
-        f2_knu3_a = self.F2_KNU3_A(x)
-        f2_knu2_a = self.F2_KNU2_A(x)
-        f2_knu1_b = self.F2_KNU1_B(x)
-        f2_knu1_a = self.F2_KNU1_A(x)
+        return outputs
 
-        f1_knu3_a = self.F1_KNU3_A(x)
-        f1_knu2_a = self.F1_KNU2_A(x)
-        f1_knu1_b = self.F1_KNU1_B(x)
-        f1_knu1_a = self.F1_KNU1_A(x)
-
-        f3_knu3_a = self.F3_KNU3_A(x)
-        f3_knu2_a = self.F3_KNU2_A(x)
-        f3_knu1_b = self.F3_KNU1_B(x)
-        f3_knu1_a = self.F3_KNU1_A(x)
-
-        f4_knu3_a = self.F4_KNU3_A(x)
-        f4_knu2_a = self.F4_KNU2_A(x)
-        f4_knu1_b = self.F4_KNU1_B(x)
-        f4_knu1_a = self.F4_KNU1_A(x)
-
-        return palm, th_knu3_a, th_knu2_a, th_knu1_a, th_knu1_b, \
-        f2_knu3_a, f2_knu2_a, f2_knu1_a, f2_knu1_b, f1_knu3_a, f1_knu2_a, \
-        f1_knu1_a, f1_knu1_b, f3_knu3_a, f3_knu2_a, f3_knu1_a, f3_knu1_b, \
-        f4_knu3_a, f4_knu2_a, f4_knu1_a, f4_knu1_b
+if __name__ == '__main__':
+    net = Net()
+    x = torch.randn(1, 3, 224, 224) # test a simple 224x224 3 channel image in single batch
+    y = net(x)
+    print(y[0])
+    print(y.shape)

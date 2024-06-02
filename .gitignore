@@ -4,3 +4,4 @@ data/calibrations/
 data/multiview_hand_pose_dataset_uploaded_v2/
 data/projections_2d/
 *.tfrecords
+__pycache__
