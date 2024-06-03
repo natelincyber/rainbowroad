@@ -20,11 +20,12 @@ class HandPose(Dataset):
 
 
 if __name__ == '__main__':
-    ds = HandPose(filename="C:\\Users\\natel\\Dev\\Projects\\RainbowRoad\\data\\dataset.h5")
+    # ds = HandPose(filename="C:\\Users\\natel\\Dev\\Projects\\RainbowRoad\\data\\dataset.h5")
+    ds = HandPose(filename="D:\\Projects\\RainbowRoad\\data\\dataset.h5")
     import matplotlib.pyplot as plt
 
     print(ds[0][0].shape)
     image_np = ds[0][0].to(torch.float32)
-    image_np = image_np.permute(1, 2, 0).numpy()
+    image_np = image_np.numpy()
     plt.imshow(image_np)
     plt.show()
